@@ -1,21 +1,28 @@
-// node --version # Should be >= 18
-// npm install @google/generative-ai
-
 import {
   GoogleGenerativeAI,
   HarmCategory,
   HarmBlockThreshold,
 } from "@google/generative-ai";
 
-// Use environment variable for API key security
-const MODEL_NAME = "gemini-1.5-flash"; // Updated to supported model
+
+const MODEL_NAME = "gemini-1.5-flash";
+
+// Use correct env variable (no REACT_APP_ needed for Node backend)
 const API_KEY = "AIzaSyDOsE2rDlKxE_eFwKv6V5ijR7k_z6wrofY";
 
 async function runChat(prompt) {
   try {
+    if (!API_KEY) {
+      throw new Error("API key not found. Please check your .env file and variable name.");
+    }
+
+    if (!prompt || typeof prompt !== 'string' || prompt.trim() === '') {
+      throw new Error("Valid prompt is required.");
+    }
+
     const genAI = new GoogleGenerativeAI(API_KEY);
     const model = genAI.getGenerativeModel({ model: MODEL_NAME });
-    
+
     const generationConfig = {
       temperature: 0.9,
       topK: 1,
@@ -48,14 +55,23 @@ async function runChat(prompt) {
       history: [],
     });
 
-    const result = await chat.sendMessage(prompt);
-    const response = result.response;
-    console.log(response.text());
-    return response.text();
-    
+    const result = await chat.sendMessage(prompt.trim());
+    const responseText = result.response.text();
+    console.log("Gemini Response:", responseText);
+
+    return responseText;
   } catch (error) {
     console.error("Error in runChat:", error);
-    throw error; // Re-throw to handle in context
+
+    if (error.message?.includes('API key')) {
+      throw new Error("Invalid or missing API key.");
+    } else if (error.message?.includes('quota')) {
+      throw new Error("API quota exceeded.");
+    } else if (error.message?.includes('model')) {
+      throw new Error("Model not available or incorrect.");
+    }
+
+    throw error;
   }
 }
 
