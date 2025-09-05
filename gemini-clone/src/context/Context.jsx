@@ -43,22 +43,15 @@ const ContextProvider = (props) => {
 			}
 
 			// Process response formatting
-			let responseArray = response.split("");
-			let newResponse = "";
-			for (let i = 0; i < responseArray.length; i++) {
-				if (i === 0 || i % 2 !== 1) {
-					newResponse += responseArray[i];
-				} else {
-					newResponse += "<b>" + responseArray[i] + "</b>";
-				}
-			}
+			// Basic formatting: support **bold** markdown and newlines
+			const formatted = response
+				.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+				.replace(/\n/g, "<br/>");
 			
-			let newResponse2 = newResponse.split("*").join("<br/>");
-			let newResponseArray = newResponse2.split("");
-			
-			for (let i = 0; i < newResponseArray.length; i++) {
-				const nextWord = newResponseArray[i];
-				delayPara(i, nextWord + "");
+			const chars = formatted.split("");
+			for (let i = 0; i < chars.length; i++) {
+				const nextChar = chars[i];
+				delayPara(i, nextChar);
 			}
 			
 		} catch (error) {

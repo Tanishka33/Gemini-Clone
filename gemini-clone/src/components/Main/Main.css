@@ -24,11 +24,12 @@
     margin: 50px 0px;
     font-size: 56px;
     color:#c4c7c5;
-    font-weight: 600px;
+    font-weight: 600;
 }
 .main .greet span{
     background: -webkit-linear-gradient(16deg,#4b90ff,#ff5546);
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 .main .cards{
@@ -151,6 +152,12 @@ animation: loader 4s infinite linear;
 
 .result-data p{
     font-size: 17px;
-    font-weight: 300px;
+    font-weight: 300;
     line-height: 1.8;
+}
+
+/* Ensure bold inside AI response is consistent */
+.result-data p strong,
+.result-data p b{
+    font-weight: 600;
 }

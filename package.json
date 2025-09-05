@@ -1,4 +1,9 @@
 {
+  "type": "module",
+  "scripts": {
+    "server": "node server/server.js",
+    "start": "node server/server.js"
+  },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
     "cors": "^2.8.5",
